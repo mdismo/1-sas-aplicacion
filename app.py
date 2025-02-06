@@ -1,4 +1,5 @@
-from flask import Flask, request, jsonify
+import os
+from flask import Flask, jsonify
 
 app = Flask(__name__)
 
@@ -7,19 +8,11 @@ app = Flask(__name__)
 def home():
     return "¡API funcionando correctamente en Render!"
 
-# Ruta para recibir datos (ejemplo con JSON)
-@app.route('/api/suma', methods=['POST'])
-def suma():
-    data = request.get_json()
-    if 'num1' in data and 'num2' in data:
-        resultado = data['num1'] + data['num2']
-        return jsonify({"resultado": resultado})
-    return jsonify({"error": "Faltan datos"}), 400
-
-# Ruta para obtener datos (ejemplo con parámetros)
-@app.route('/api/mensaje/<nombre>', methods=['GET'])
-def mensaje(nombre):
-    return jsonify({"mensaje": f"Hola, {nombre}!"})
+# Ruta para verificar si la clave API está cargada
+@app.route('/api/verificar-clave', methods=['GET'])
+def verificar_clave():
+    api_key = os.getenv("OPENAI_API_KEY")
+    return jsonify({"API_KEY": api_key if api_key else "No encontrada"})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
