@@ -1,22 +1,21 @@
 import os
-from flask import Flask, jsonify
+from flask import Flask, render_template, jsonify
 
 app = Flask(__name__)
 
-# Cargar claves API desde variables de entorno
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-CREADOR_DE_SAS = os.getenv("CREADOR_DE_SAS")
-
+# Ruta principal que muestra el archivo HTML
 @app.route('/')
 def home():
-    return "¡API funcionando correctamente en Render!"
+    return render_template("index.html")
 
-# Ruta para verificar que ambas claves se están leyendo
+# Ruta para verificar las claves API
 @app.route('/api/verificar-claves', methods=['GET'])
 def verificar_claves():
+    openai_key = os.getenv("OPENAI_API_KEY")
+    creador_key = os.getenv("CREADOR_DE_SAS")
     return jsonify({
-        "OPENAI_API_KEY": OPENAI_API_KEY if OPENAI_API_KEY else "No encontrada",
-        "CREADOR_DE_SAS": CREADOR_DE_SAS if CREADOR_DE_SAS else "No encontrada"
+        "OPENAI_API_KEY": openai_key if openai_key else "No encontrada",
+        "CREADOR_DE_SAS": creador_key if creador_key else "No encontrada"
     })
 
 if __name__ == '__main__':
